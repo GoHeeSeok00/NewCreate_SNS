@@ -1,9 +1,11 @@
-# SNS new_create.com
+# SNS new_create.com 
 
 ## ✅ 서비스 개요
   - 예술가(藝術家), 아티스트(Artist)의 혼을 가진 모든 사람이 자신이 new create 한 창작물, 발견 등을 공유하고 소통하는 SNS(Social Networking Service) 서비스입니다.
   - 전문성을 떠나 일상적인 생활속의 작은 창작물, 발견을 공유할 수 있습니다.
   - 자신이 만든 소중한 가치를 세상에 공유하고 싶다면 new create 하세요✨
+
+📜 [노션 페이지](https://wool-cobalt-585.notion.site/SNS-new_create-com-84e9627ace194465ada3639f8c25d9bb) 
 
 <div>
 <details>
