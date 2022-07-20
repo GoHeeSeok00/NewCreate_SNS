@@ -7,6 +7,8 @@
 
 📜 [노션 페이지](https://wool-cobalt-585.notion.site/SNS-new_create-com-84e9627ace194465ada3639f8c25d9bb) 
 
+🚥 개발기간 : 2022.07.20 ~ 2022.07.22 (3일)
+
 <div>
 <details>
 <summary>서비스 기능 소개</summary> <br>
@@ -33,7 +35,7 @@
 ![python badge](https://img.shields.io/badge/Python-3.8-%233776AB?&logo=python&logoColor=white)
 ![django badge](https://img.shields.io/badge/Django-4.0.6-%23092E20?&logo=Django&logoColor=white)
 - DB<br>
-![mysql badge](https://img.shields.io/badge/MySQL-8.0.29-%234479A1?&logo=MySQL&logoColor=white)
+![mysql badge](https://img.shields.io/badge/MySQL-8.0.28-%234479A1?&logo=MySQL&logoColor=white)
 
 - 배포<br>
 ![aws badge](https://img.shields.io/badge/AWS-EC2-%23FF9900?&logo=Amazon%20EC2&logoColor=white)
