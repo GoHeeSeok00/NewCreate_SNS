@@ -13,6 +13,7 @@ pre-commit = "*"
 black = "*"
 flake8 = "*"
 isort = "*"
+pillow = "*"
 
 [dev-packages]
 
