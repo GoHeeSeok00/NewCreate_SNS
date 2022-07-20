@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+djangorestframework = "*"
+tzdata = "*"
+mysqlclient = "*"
+django-cors-headers = "*"
+pre-commit = "*"
+black = "*"
+flake8 = "*"
+isort = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
