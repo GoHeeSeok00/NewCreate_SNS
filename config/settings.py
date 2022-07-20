@@ -43,10 +43,9 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
     # "rest_framework_simplejwt",
-    # "rest_framework_simplejwt.token_blacklist",
 ]
 
-PROJECT_APPS = []
+PROJECT_APPS = ["user", "account"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
