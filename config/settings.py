@@ -190,7 +190,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 # }
 
-# AUTH_USER_MODEL = "user.User"  # app.table 형태
+AUTH_USER_MODEL = "user.User"  # app.table 형태
 
 # LOGGING = {
 #     'version': 1,
