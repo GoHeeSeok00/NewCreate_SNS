@@ -45,7 +45,10 @@ THIRD_PARTY_APPS = [
     # "rest_framework_simplejwt",
 ]
 
-PROJECT_APPS = ["user", "account"]
+PROJECT_APPS = [
+    "user",
+    "account",
+]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
