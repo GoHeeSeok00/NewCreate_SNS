@@ -34,4 +34,4 @@ class SignupView(APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"message": "success"}, status=status.HTTP_201_CREATED)
+        return Response({"message": "회원가입 성공"}, status=status.HTTP_201_CREATED)
