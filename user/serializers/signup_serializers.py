@@ -6,6 +6,7 @@ from user.models import User as UserModel
 class UserSignupSerializer(serializers.ModelSerializer):
     """
     Assignee : 고희석
+    Date : 2022.07.21
 
     회원가입을 위한 시리얼라이저입니다.
     """
