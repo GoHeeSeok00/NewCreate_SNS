@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -14,6 +14,7 @@ class SignupView(APIView):
     회원가입을 위한 view입니다. 회원가입 기능은 post method로 동작합니다.
     """
 
+    permission_classes = [permissions.AllowAny]
     serializer_class = UserSignupSerializer
 
     def post(self, request):
