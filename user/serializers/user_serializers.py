@@ -42,6 +42,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "password_check",
             "nickname",
             "username",
+            "introduce",
             "mobile_number",
             "date_of_birth",
         ]
@@ -52,3 +53,28 @@ class UserDetailSerializer(serializers.ModelSerializer):
                 "style": {"input_type": "password"},
             },
         }
+
+    def validate(self, data):
+        """
+        비밀번호 더블체크 validate
+
+        :param data:  1차 validate를 통과한 데이터
+        :return data: 커스텀 validate를 통과한 데이터
+        """
+        password = data.get("password", "")
+        password_check = data.get("password_check", "")
+
+        if password != password_check:
+            raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+        return data
+
+    def update(self, instance, validated_data):
+        # instance에는 입력된 object가 담긴다.
+        for key, value in validated_data.items():
+            if key == "password":
+                instance.set_password(value)
+                continue
+
+            setattr(instance, key, value)
+        instance.save()
+        return instance

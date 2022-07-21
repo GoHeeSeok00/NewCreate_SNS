@@ -105,3 +105,32 @@ class UserDetailView(APIView):
                 {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
             )
         return Response(UserDetailSerializer(user).data, status=status.HTTP_200_OK)
+
+    def put(self, request, obj_id):
+        """
+        사용자 정보 수정
+
+        :param request.data["email"]:           이메일 (중복확인)
+        :param request.data["password"]:        비밀번호
+        :param request.data["password_check"]:  비밀번호 확인
+        :param request.data["username"]:        사용자 이름
+        :param request.data["nickname"]:        닉네임 (중복확인)
+        :param request.data["informatino"]:     소개
+        :param request.data["mobile"]:          핸드폰 번호
+        :param request.data["date_of_birth"]:   생년월일
+        :param obj_id:                          사용자 모델의 기본키(id필드)
+
+        :return Response: (에러 or 메시지) and 상태 코드 응답
+        """
+        user = self.get_object_and_check_permission(obj_id)
+        if not user:
+            return Response(
+                {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        user_serializer = UserDetailSerializer(
+            user, data=request.data, partial=True
+        )  # 일부만 수정 가능
+        user_serializer.is_valid(raise_exception=True)
+        user_serializer.save()
+        return Response({"message": "수정 성공"}, status=status.HTTP_200_OK)
