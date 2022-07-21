@@ -11,11 +11,17 @@ class UserSignupSerializer(serializers.ModelSerializer):
     회원가입을 위한 시리얼라이저입니다.
     """
 
+    password_check = serializers.CharField(
+        required=True,
+        write_only=True,
+    )
+
     class Meta(object):
         model = UserModel
         fields = [
             "email",
             "password",
+            "password_check",
             "nickname",
             "username",
             "mobile_number",
@@ -40,3 +46,18 @@ class UserSignupSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+    def validate(self, data):
+        """
+        비밀번호 더블체크 validate
+
+        :param data:    1차 validate를 통과한 데이터
+        :return data:   커스텀 validate를 통과한 데이터
+        """
+        password = data.get("password", "")
+        password_check = data.get("password_check", "")
+
+        if password != password_check:
+            raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+
+        return data
