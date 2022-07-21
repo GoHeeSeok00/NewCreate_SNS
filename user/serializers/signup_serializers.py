@@ -28,9 +28,9 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """
-        :param validated_data: validate를 통과한 data
-        :key password: set_password 함수를 이용해 암호 해싱
-        :return instance: UserModel instance
+        :param validated_data:  validate를 통과한 data
+        :key password:          set_password 함수를 이용해 암호 해싱
+        :return instance:       UserModel instance
         """
         password = validated_data.pop("password", "")
 

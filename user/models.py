@@ -5,6 +5,7 @@ from django.db import models
 class CustomUserManager(BaseUserManager):
     """
     Assignee : 고희석
+    Date : 2022.07.20
 
     User 모델을 커스텀 하기 위한 CustomUserManager입니다.
     create_user, create_superuser 메소드를 정의하고 있습니다.
@@ -41,6 +42,7 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractBaseUser):
     """
     Assignee : 고희석
+    Date : 2022.07.20
 
     AbstractBaseUser를 상속받은 Custom User 모델입니다.
     email 필드를 Id로 사용하며 email, nickname 필드는 unique key입니다.

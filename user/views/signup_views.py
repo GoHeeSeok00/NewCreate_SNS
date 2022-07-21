@@ -11,7 +11,7 @@ class SignupView(APIView):
     Assignee : 고희석
     Date : 2022.07.21
 
-    회원가입을 위한 view입니다
+    회원가입을 위한 view입니다. 회원가입 기능은 post method로 동작합니다.
     """
 
     serializer_class = UserSignupSerializer
