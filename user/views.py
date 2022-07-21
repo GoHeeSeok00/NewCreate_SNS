@@ -2,9 +2,10 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from config.permissions import IsOwner
 from user.models import User as UserModel
 from user.serializers.signup_serializers import SignupSerializer
-from user.serializers.user_serializers import UserListSerializer
+from user.serializers.user_serializers import UserDetailSerializer, UserListSerializer
 
 
 # url : /api/users/signup
@@ -60,3 +61,47 @@ class UserView(APIView):
         """
         user_serializer = self.serializer_class(UserModel.objects.all(), many=True).data
         return Response(user_serializer, status=status.HTTP_200_OK)
+
+
+# url : /api/users/<int:obj_id>
+class UserDetailView(APIView):
+    """
+    Assignee : 고희석
+    Date : 2022.07.22
+
+    사용자 상세 조회, 정보 수정을 위한 view입니다.
+    GET : 회원 상세 조회
+    PUT : 회원 정보 수정
+    """
+
+    permission_classes = [IsOwner]
+
+    def get_object_and_check_permission(self, obj_id):
+        """
+        Assignee : 희석
+        obj_id : int
+        input 인자로 단일 오브젝트를 가져오고, 퍼미션 검사를 하는 메서드입니다.
+        DoesNotExist 에러 발생 시 None을 리턴합니다.
+        """
+        try:
+            object = UserModel.objects.get(id=obj_id)
+        except UserModel.DoesNotExist:
+            return
+
+        self.check_object_permissions(self.request, object)
+        return object
+
+    def get(self, request, obj_id):
+        """
+        사용자 상세 조회
+
+        :param request:
+        :param obj_id: 사용자 모델의 기본키(id필드)
+        :return Response: (에러 or 메시지) and 상태 코드 응답
+        """
+        user = self.get_object_and_check_permission(obj_id)
+        if not user:
+            return Response(
+                {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
+            )
+        return Response(UserDetailSerializer(user).data, status=status.HTTP_200_OK)

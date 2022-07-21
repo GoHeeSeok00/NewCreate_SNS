@@ -25,6 +25,7 @@ class SignupSerializer(serializers.ModelSerializer):
             "password_check",
             "nickname",
             "username",
+            "introduce",
             "mobile_number",
             "date_of_birth",
         ]
