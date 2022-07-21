@@ -13,9 +13,6 @@ class CustomUserManager(BaseUserManager):
     """
 
     def create_user(self, email, password, nickname, **extra_fields):
-        """
-        Assignee : 고희석
-        """
         if not email:
             raise ValueError("Users must have an email")
         user = self.model(email=email, nickname=nickname, **extra_fields)
@@ -25,8 +22,6 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, email, password, nickname, **extra_fields):
         """
-        Assignee : 고희석
-
         python manage.py createsuperuser 커멘드 실행 시 사용되는 함수입니다.
         관리자 계정을 생성하기 위해 extra_fields를 지정해줍니다.
         """
