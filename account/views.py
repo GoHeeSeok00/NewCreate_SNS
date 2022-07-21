@@ -11,7 +11,7 @@ class LoginView(APIView):
     Assignee : 고희석
     Date : 2022.07.21
 
-    로그인을 위한 view입니다. 로그인 기능은 post method로 동작합니다.
+    로그인을 위한 view입니다. 로그인 기능은 POST method로 동작합니다.
     """
 
     permission_classes = [permissions.AllowAny]
@@ -52,7 +52,7 @@ class LogoutView(APIView):
     Assignee : 고희석
     Date : 2022.07.21
 
-    로그아웃을 위한 view입니다. 로그아웃 기능은 post method로 동작합니다.
+    로그아웃을 위한 view입니다. 로그아웃 기능은 POST method로 동작합니다.
     """
 
     permission_classes = [permissions.IsAuthenticated]

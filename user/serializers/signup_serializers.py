@@ -3,7 +3,7 @@ from rest_framework import serializers
 from user.models import User as UserModel
 
 
-class UserSignupSerializer(serializers.ModelSerializer):
+class SignupSerializer(serializers.ModelSerializer):
     """
     Assignee : 고희석
     Date : 2022.07.21
