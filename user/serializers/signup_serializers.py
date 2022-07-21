@@ -14,6 +14,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
     password_check = serializers.CharField(
         required=True,
         write_only=True,
+        style={"input_type": "password"},
     )
 
     class Meta(object):
@@ -29,15 +30,20 @@ class UserSignupSerializer(serializers.ModelSerializer):
         ]
 
         extra_kwargs = {
-            "password": {"write_only": True},
+            "password": {
+                "write_only": True,
+                "style": {"input_type": "password"},
+            },
         }
 
     def create(self, validated_data):
         """
-        :param validated_data:  validate를 통과한 data
-        :key password:          set_password 함수를 이용해 암호 해싱
-        :return instance:       UserModel instance
+        :param validated_data: validate를 통과한 data
+        :key password_check:   user 인스턴스를 만들 때 필요없는 필드는 제거합니다.
+        :key password:         set_password 함수를 이용해 암호 해싱
+        :return instance:      UserModel instance
         """
+        validated_data.pop("password_check", "")
         password = validated_data.pop("password", "")
 
         instance = UserModel(**validated_data)
