@@ -64,9 +64,4 @@ class LogoutView(APIView):
         :param request:
         :return Response: 메시지 and 상태 코드 응답
         """
-        return Response(
-            {
-                "message": "로그아웃 성공",
-            },
-            status=status.HTTP_200_OK,
-        )
+        return Response({"message": "로그아웃 성공"}, status=status.HTTP_200_OK)
