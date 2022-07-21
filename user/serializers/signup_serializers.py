@@ -39,18 +39,3 @@ class UserSignupSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-    def update(self, instance, validated_data):
-        """
-        :param instance: 수정하려고 하는 instance
-        :param validated_data: validate를 통과한 data
-        :return instance: instance
-        """
-        for key, value in validated_data.items():
-            if key == "password":
-                instance.set_password(value)
-                continue
-            setattr(instance, key, value)
-        instance.save()
-
-        return instance
