@@ -44,3 +44,29 @@ class LoginView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+# url : /accounts/logout
+class LogoutView(APIView):
+    """
+    Assignee : 고희석
+    Date : 2022.07.21
+
+    로그아웃을 위한 view입니다. 로그아웃 기능은 post method로 동작합니다.
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        """
+        로그아웃
+
+        :param request:
+        :return Response: 메시지 and 상태 코드 응답
+        """
+        return Response(
+            {
+                "message": "로그아웃 성공",
+            },
+            status=status.HTTP_200_OK,
+        )
