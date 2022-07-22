@@ -27,5 +27,5 @@ class Post(TimeStamp):
     title = models.CharField("제목", max_length=100)
     content = models.TextField("내용")
     hashtags_text = models.TextField("해시태그")
-    view_count = models.IntegerField("조회수")
-    like_count = models.IntegerField("좋아요수")
+    view_count = models.IntegerField("조회수", default=0)
+    like_count = models.IntegerField("좋아요수", default=0)

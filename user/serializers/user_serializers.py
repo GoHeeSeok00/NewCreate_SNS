@@ -14,6 +14,7 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = UserModel
         fields = [
+            "id",
             "nickname",
             "profile_image",
             "introduce",
@@ -37,6 +38,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = UserModel
         fields = [
+            "id",
             "email",
             "password",
             "password_check",
@@ -46,13 +48,13 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "mobile_number",
             "date_of_birth",
         ]
-
         extra_kwargs = {
             "password": {
                 "write_only": True,
                 "style": {"input_type": "password"},
             },
         }
+        read_only_fields = ["id"]
 
     def validate(self, data):
         """

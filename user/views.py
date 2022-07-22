@@ -37,7 +37,7 @@ class SignupView(APIView):
         :param request.data["mobile"]:          핸드폰 번호
         :param request.data["date_of_birth"]:   생년월일
 
-        :return Response:                       메시지 and 상태 코드
+        :return Response:                       메시지 and 상태코드
         """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -62,7 +62,7 @@ class UserView(APIView):
         사용자 목록 조회
 
         :param request:
-        :return Response: 사용자 목록, 상태 코드
+        :return Response: 사용자 목록, 상태코드
         """
         user_serializer = self.serializer_class(UserModel.objects.all(), many=True).data
         return Response(user_serializer, status=status.HTTP_200_OK)
@@ -88,7 +88,7 @@ class UserDetailView(APIView):
 
         :param request:
         :param obj_id:      사용자 모델의 기본키(id필드)
-        :return Response:   (에러 or 사용자 정보) and 상태 코드 응답
+        :return Response:   (에러 or 사용자 정보) and 상태코드 응답
         """
         user = get_object_and_check_permission(self, obj_id)
         if not user:
@@ -111,7 +111,7 @@ class UserDetailView(APIView):
         :param request.data["date_of_birth"]:   생년월일
         :param obj_id:                          사용자 모델의 기본키(id필드)
 
-        :return Response:                       (에러 or 메시지) and 상태 코드 응답
+        :return Response:                       (에러 or 메시지) and 상태코드 응답
         """
         user = get_object_and_check_permission(self, obj_id)
         if not user:
@@ -145,7 +145,7 @@ class UserWithdraw(APIView):
         :param request["is_active"]:  회원 탈퇴를 위해 True를 입력받습니다.
         :param obj_id:                사용자 모델의 기본키(id필드)
 
-        :return Response:             (에러 or 메시지) and 상태 코드 응답
+        :return Response:             (에러 or 메시지) and 상태코드 응답
         """
         user = get_object_and_check_permission(self, obj_id)
         if not user:
