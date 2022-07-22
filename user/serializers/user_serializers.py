@@ -78,3 +78,23 @@ class UserDetailSerializer(serializers.ModelSerializer):
             setattr(instance, key, value)
         instance.save()
         return instance
+
+
+class UserWithdrawSerializer(serializers.ModelSerializer):
+    """
+    Assignee : 고희석
+    Date : 2022.07.22
+
+    회원 탈퇴를 위한 시리얼라이저입니다.
+    """
+
+    class Meta(object):
+        model = UserModel
+        fields = [
+            "is_active",
+        ]
+
+    def validate(self, data):
+        if data["is_active"] != True:
+            raise serializers.ValidationError("잘못된 입력입니다.")
+        return data

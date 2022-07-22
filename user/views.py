@@ -5,7 +5,12 @@ from rest_framework.views import APIView
 from config.permissions import IsOwner
 from user.models import User as UserModel
 from user.serializers.signup_serializers import SignupSerializer
-from user.serializers.user_serializers import UserDetailSerializer, UserListSerializer
+from user.serializers.user_serializers import (
+    UserDetailSerializer,
+    UserListSerializer,
+    UserWithdrawSerializer,
+)
+from user.utils.object_utils import get_object_and_check_permission
 
 
 # url : /api/users/signup
@@ -32,7 +37,7 @@ class SignupView(APIView):
         :param request.data["mobile"]:          핸드폰 번호
         :param request.data["date_of_birth"]:   생년월일
 
-        :return Response: 메시지 and 상태 코드
+        :return Response:                       메시지 and 상태 코드
         """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -75,36 +80,22 @@ class UserDetailView(APIView):
     """
 
     permission_classes = [IsOwner]
-
-    def get_object_and_check_permission(self, obj_id):
-        """
-        Assignee : 희석
-        obj_id : int
-        input 인자로 단일 오브젝트를 가져오고, 퍼미션 검사를 하는 메서드입니다.
-        DoesNotExist 에러 발생 시 None을 리턴합니다.
-        """
-        try:
-            object = UserModel.objects.get(id=obj_id)
-        except UserModel.DoesNotExist:
-            return
-
-        self.check_object_permissions(self.request, object)
-        return object
+    serializer_class = UserDetailSerializer
 
     def get(self, request, obj_id):
         """
         사용자 상세 조회
 
         :param request:
-        :param obj_id: 사용자 모델의 기본키(id필드)
-        :return Response: (에러 or 메시지) and 상태 코드 응답
+        :param obj_id:      사용자 모델의 기본키(id필드)
+        :return Response:   (에러 or 사용자 정보) and 상태 코드 응답
         """
-        user = self.get_object_and_check_permission(obj_id)
+        user = get_object_and_check_permission(self, obj_id)
         if not user:
             return Response(
                 {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
             )
-        return Response(UserDetailSerializer(user).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(user).data, status=status.HTTP_200_OK)
 
     def put(self, request, obj_id):
         """
@@ -120,17 +111,49 @@ class UserDetailView(APIView):
         :param request.data["date_of_birth"]:   생년월일
         :param obj_id:                          사용자 모델의 기본키(id필드)
 
-        :return Response: (에러 or 메시지) and 상태 코드 응답
+        :return Response:                       (에러 or 메시지) and 상태 코드 응답
         """
-        user = self.get_object_and_check_permission(obj_id)
+        user = get_object_and_check_permission(self, obj_id)
         if not user:
             return Response(
                 {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
             )
 
-        user_serializer = UserDetailSerializer(
-            user, data=request.data, partial=True
-        )  # 일부만 수정 가능
-        user_serializer.is_valid(raise_exception=True)
-        user_serializer.save()
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response({"message": "수정 성공"}, status=status.HTTP_200_OK)
+
+
+# url : /api/users/<obj_id>/withdraw
+class UserWithdraw(APIView):
+    """
+    Assignee : 고희석
+    Date : 2022.07.22
+
+    회원 탈퇴를 위한 view입니다.
+    DELETE : 회원 탈퇴(soft delete)
+    """
+
+    permission_classes = [IsOwner]
+    serializer_class = UserWithdrawSerializer
+
+    def delete(self, request, obj_id):
+        """
+        회원 탈퇴
+
+        :param request["is_active"]:  회원 탈퇴를 위해 True를 입력받습니다.
+        :param obj_id:                사용자 모델의 기본키(id필드)
+
+        :return Response:             (에러 or 메시지) and 상태 코드 응답
+        """
+        user = get_object_and_check_permission(self, obj_id)
+        if not user:
+            return Response(
+                {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = self.serializer_class(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "삭제 성공"}, status=status.HTTP_200_OK)
