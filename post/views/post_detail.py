@@ -3,8 +3,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from config.permissions import IsOwner
-from post.serializers import PostDetailGetSerializer
-from post.utils import add_view_count, get_object_return_object_or_none
+from post.serializers import PostDetailGetSerializer, PostDetailUpdateSerializer
+from post.utils import (
+    add_view_count,
+    get_object_and_check_permission_return_object_or_none,
+    get_object_return_object_or_none,
+)
 
 
 # url : /api/posts/<obj_id>
@@ -36,3 +40,22 @@ class PostDetailView(APIView):
                 {"error": "게시글이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND
             )
         return Response(PostDetailGetSerializer(post).data, status=status.HTTP_200_OK)
+
+    def put(self, request, obj_id):
+        """
+        게시글 수정
+
+        :param obj_id: 게시글 오브젝트 아이디
+        :return Response: (메시지 or 에러) and 상태코드
+        """
+
+        post = get_object_and_check_permission_return_object_or_none(self, obj_id)
+        if not post:
+            return Response(
+                {"error": "게시글이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = PostDetailUpdateSerializer(post, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "게시글 수정 성공"}, status=status.HTTP_200_OK)
