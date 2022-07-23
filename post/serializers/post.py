@@ -1,9 +1,6 @@
 from rest_framework import serializers
 
-from post.models import PostModel, StatusModel
-
-# status validate에서 사용되는 쿼리셋 입니다.
-STATUS_QUERY_SET = StatusModel.objects.all().exclude(status="delete")
+from post.models import PostModel
 
 
 class PostListSerializer(serializers.ModelSerializer):
@@ -54,7 +51,7 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
-        if data["status"] not in STATUS_QUERY_SET:  # public, private
+        if data["status"].status == "delete":  # public, private 만 가능
             raise serializers.ValidationError("잘못된 입력입니다.")
         return data
 
