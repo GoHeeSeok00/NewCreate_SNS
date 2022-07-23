@@ -4,3 +4,4 @@ from post.serializers.post_detail import (
     PostDetailStatusSerializer,
     PostDetailUpdateSerializer,
 )
+from post.serializers.post_image import PostImageSerializer
