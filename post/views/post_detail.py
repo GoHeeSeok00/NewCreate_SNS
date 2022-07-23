@@ -45,8 +45,11 @@ class PostDetailView(APIView):
         """
         게시글 수정
 
-        :param obj_id: 게시글 오브젝트 아이디
-        :return Response: (메시지 or 에러) and 상태코드
+        :param obj_id:                          게시글 오브젝트 아이디
+        :param request.data["title"}:           게시글 제목
+        :param request.data["content"}:         게시글 내용
+        :param request.data["hashtags_text"}:   게시글 해시태그
+        :return Response:                       (메시지 or 에러) and 상태코드
         """
 
         post = get_object_and_check_permission_return_object_or_none(self, obj_id)
