@@ -1,7 +1,7 @@
-from post.models import PostModel
+from post.models import PostImageModel, PostModel
 
 
-def get_object_return_object_or_none(self, obj_id):
+def get_post_object_return_object_or_none(self, obj_id):
     """
     Assignee : 희석
     Date : 2022.07.23
@@ -25,7 +25,7 @@ def get_object_return_object_or_none(self, obj_id):
     return object
 
 
-def get_object_and_check_permission_return_object_or_none(self, obj_id):
+def get_post_object_and_check_permission_return_object_or_none(self, obj_id):
     """
     Assignee : 희석
     Date : 2022.07.23
@@ -38,6 +38,25 @@ def get_object_and_check_permission_return_object_or_none(self, obj_id):
     try:
         object = PostModel.objects.get(id=obj_id)
     except PostModel.DoesNotExist:
+        return
+
+    self.check_object_permissions(self.request, object)
+    return object
+
+
+def get_post_image_object_and_check_permission_return_object_or_none(self, obj_id):
+    """
+    Assignee : 희석
+    Date : 2022.07.23
+
+    :param obj_id: 게시글 사진 객체 아이디
+
+    obj_id로 객체를 가져오고, 퍼미션 검사를 하는 메서드입니다.
+    DoesNotExist 에러 발생 시 None을 리턴합니다.
+    """
+    try:
+        object = PostImageModel.objects.get(id=obj_id)
+    except PostImageModel.DoesNotExist:
         return
 
     self.check_object_permissions(self.request, object)

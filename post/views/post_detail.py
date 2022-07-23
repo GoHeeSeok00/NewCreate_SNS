@@ -10,8 +10,8 @@ from post.serializers import (
 )
 from post.utils import (
     add_view_count,
-    get_object_and_check_permission_return_object_or_none,
-    get_object_return_object_or_none,
+    get_post_object_and_check_permission_return_object_or_none,
+    get_post_object_return_object_or_none,
 )
 
 
@@ -38,7 +38,7 @@ class PostDetailView(APIView):
         :return Response: (게시글 데이터 or 에러) and 상태코드
         """
         add_view_count(self, obj_id)  # 조회수 1증가
-        post = get_object_return_object_or_none(self, obj_id)
+        post = get_post_object_return_object_or_none(self, obj_id)
         if not post:
             return Response(
                 {"error": "게시글이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND
@@ -56,7 +56,7 @@ class PostDetailView(APIView):
         :return Response:                       (메시지 or 에러) and 상태코드
         """
 
-        post = get_object_and_check_permission_return_object_or_none(self, obj_id)
+        post = get_post_object_and_check_permission_return_object_or_none(self, obj_id)
         if not post:
             return Response(
                 {"error": "게시글이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND
@@ -76,7 +76,7 @@ class PostDetailView(APIView):
         :return Response:               (메시지 or 에러) and 상태코드
         """
 
-        post = get_object_and_check_permission_return_object_or_none(self, obj_id)
+        post = get_post_object_and_check_permission_return_object_or_none(self, obj_id)
         if not post:
             return Response(
                 {"error": "게시글이 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND

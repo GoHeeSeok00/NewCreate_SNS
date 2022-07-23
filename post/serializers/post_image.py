@@ -19,9 +19,9 @@ class PostImageSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """
-        self.context["post"] : 게시글 오브젝트 id
+        self.context["post"] : 게시글 오브젝트
         """
         instance = PostImageModel(**validated_data)
-        instance.post_id = self.context["post"]
+        instance.post = self.context["post"]
         instance.save()
         return instance
