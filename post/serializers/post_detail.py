@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from post.models import PostModel
@@ -58,5 +59,38 @@ class PostDetailUpdateSerializer(serializers.ModelSerializer):
         for key, value in validated_data.items():
             setattr(instance, key, value)
             field_list.append(key)
+        instance.save(update_fields=field_list)
+        return instance
+
+
+class PostDetailStatusSerializer(serializers.ModelSerializer):
+    """
+    Assignee : 고희석
+    Date : 2022.07.23
+
+    게시글 상태 변경 시리얼라이저입니다.
+    """
+
+    class Meta:
+        model = PostModel
+        fields = [
+            "status",
+        ]
+
+    def update(self, instance, validated_data):
+        """
+        :param instance:                    게시글 객체
+        :param validated_data["status"]:    게시글 상태 (public, private, delete)
+        """
+        field_list = ["deleted_at"]
+        if validated_data["status"].status == "delete":
+            instance.status = validated_data["status"]
+            instance.deleted_at = timezone.now()
+        else:
+            field_list.append("updated_at")
+            instance.status = validated_data["status"]
+            instance.deleted_at = None
+
+        field_list.append("status")
         instance.save(update_fields=field_list)
         return instance

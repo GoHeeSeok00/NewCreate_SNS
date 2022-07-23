@@ -1,12 +1,12 @@
 STATUS_DICT = {
-    "public": 1,
-    "private": 2,
-    "delete": 3,
+    1: "public",
+    2: "private",
+    3: "delete",
 }
 
 
-def to_int_status_id(str):
+def to_str_status_id(int):
     try:
-        return STATUS_DICT[str]
+        return STATUS_DICT[int]
     except KeyError:
         return
