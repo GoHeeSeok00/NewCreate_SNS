@@ -27,7 +27,9 @@ class PostView(APIView):
         :return Response: 게시글 목록 data, 상태코드
         """
         return Response(
-            PostListSerializer(PostModel.objects.all(), many=True).data,
+            PostListSerializer(
+                PostModel.objects.filter(status__status="public"), many=True
+            ).data,
             status=status.HTTP_200_OK,
         )
 
