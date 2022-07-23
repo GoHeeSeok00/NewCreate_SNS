@@ -10,7 +10,7 @@ from user.serializers.user_serializers import (
     UserListSerializer,
     UserWithdrawSerializer,
 )
-from user.utils.object_utils import get_object_and_check_permission
+from user.utils import get_object_and_check_permission
 
 
 # url : /api/users/signup
