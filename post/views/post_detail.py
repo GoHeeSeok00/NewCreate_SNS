@@ -27,7 +27,7 @@ class PostDetailView(APIView):
         게시글 상세 조회
 
         :param obj_id: 게시글 오브젝트 아이디
-        :return Response:
+        :return Response: (게시글 데이터 or 에러) and 상태코드
         """
         add_view_count(self, obj_id)  # 조회수 1증가
         post = get_object_return_object_or_none(self, obj_id)
