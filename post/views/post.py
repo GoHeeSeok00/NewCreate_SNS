@@ -2,9 +2,8 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from post.models import Post as PostModel
-from post.serializers import PostSerializer
-from user.serializers.signup_serializers import SignupSerializer
+from post.models import PostModel
+from post.serializers import PostListSerializer, PostSerializer
 
 
 # url : /api/posts
@@ -28,7 +27,7 @@ class PostView(APIView):
         :return Response: 게시글 목록 data, 상태코드
         """
         return Response(
-            SignupSerializer(PostModel.objects.all(), many=True).data,
+            PostListSerializer(PostModel.objects.all(), many=True).data,
             status=status.HTTP_200_OK,
         )
 

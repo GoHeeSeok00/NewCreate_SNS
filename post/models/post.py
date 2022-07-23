@@ -1,6 +1,6 @@
 from django.db import models
 
-from config.models import TimeStamp
+from config.models import TimeStamp as TimeStampModel
 from user.models import User as UserModel
 
 
@@ -8,7 +8,7 @@ class Status(models.Model):
     status = models.CharField("상태", max_length=20)
 
 
-class Post(TimeStamp):
+class Post(TimeStampModel):
     """
     Assignee : 고희석
     Date : 2022.07.22
