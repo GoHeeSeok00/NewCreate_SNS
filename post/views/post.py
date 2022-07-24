@@ -23,14 +23,21 @@ class PostView(APIView):
         """
         게시글 목록 조회
 
-        :param request:
+        :param page: 페이지네이션을 위한 파라미터입니다.
+        :param limit: 페이지네이션 개수를 정하기 위한 파라미터입니다.
         :return Response: 게시글 목록 data, 상태코드
         """
+
+        # 클라이언트에서 전해준 page, limit 값을 저장 (default : none -> 1, "" -> 1)
+        page = int(request.GET.get("page", 1) or 1)
+        limit = int(request.GET.get("limit", 10) or 10)
+        offset = limit * (page - 1)
+
+        posts = PostModel.objects.filter(status__status="public")[
+            offset : offset + limit
+        ]
         return Response(
-            PostListSerializer(
-                PostModel.objects.filter(status__status="public"), many=True
-            ).data,
-            status=status.HTTP_200_OK,
+            PostListSerializer(posts, many=True).data, status=status.HTTP_200_OK
         )
 
     def post(self, request):
