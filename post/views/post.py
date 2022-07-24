@@ -23,17 +23,21 @@ class PostView(APIView):
         """
         게시글 목록 조회
 
-        :param page: 페이지네이션을 위한 파라미터입니다.
-        :param limit: 페이지네이션 개수를 정하기 위한 파라미터입니다.
-        :return Response: 게시글 목록 data, 상태코드
+        :param page:        페이지네이션을 위한 파라미터입니다.             default = 1
+        :param limit:       페이지네이션 개수를 정하기 위한 파라미터입니다. default = 10
+        :param sorting:     정렬 방법을 정하는 파라미터 입니다.             default = -created_at
+        :return Response:   게시글 목록 data, 상태코드
         """
 
-        # 클라이언트에서 전해준 page, limit 값을 저장 (default : none -> 1, "" -> 1)
+        # 페이지네이션 설정
         page = int(request.GET.get("page", 1) or 1)
         limit = int(request.GET.get("limit", 10) or 10)
         offset = limit * (page - 1)
 
-        posts = PostModel.objects.filter(status__status="public")[
+        # 정렬 설정
+        sorting = request.GET.get("sorting", "-created_at") or "-created_at"
+
+        posts = PostModel.objects.order_by(sorting).filter(status__status="public")[
             offset : offset + limit
         ]
         return Response(
