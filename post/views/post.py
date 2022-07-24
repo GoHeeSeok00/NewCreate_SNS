@@ -25,7 +25,8 @@ class PostView(APIView):
 
         :param page:        페이지네이션을 위한 파라미터입니다.             default = 1
         :param limit:       페이지네이션 개수를 정하기 위한 파라미터입니다. default = 10
-        :param sorting:     정렬 방법을 정하는 파라미터 입니다.             default = -created_at
+        :param sorting:     정렬 방법을 정하는 파라미터입니다.              default = -created_at
+        :param searching:   검색을 위한 파라미터입니다.                     default = ""
         :return Response:   게시글 목록 data, 상태코드
         """
 
@@ -37,7 +38,18 @@ class PostView(APIView):
         # 정렬 설정
         sorting = request.GET.get("sorting", "-created_at") or "-created_at"
 
-        posts = PostModel.objects.order_by(sorting).filter(status__status="public")[
+        # 검색 설정
+        search = request.GET.get("searching", "") or ""
+        search_list = search.split(" ")
+
+        search_posts = PostModel.objects.filter(title__icontains=search_list[0])
+
+        for word in search_list[1:]:
+            search_posts = search_posts | PostModel.objects.filter(
+                title__icontains=word
+            )
+
+        posts = search_posts.order_by(sorting).filter(status__status="public")[
             offset : offset + limit
         ]
         return Response(
