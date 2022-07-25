@@ -1,10 +1,11 @@
 from django.db import models
 
+from config.models import TimeStamp as TimeStampModel
 from post.models.post import Post as PostModel
 from user.models import User as UserModel
 
 
-class PostLike(models.Model):
+class PostLike(TimeStampModel):
     """
     Assignee : 고희석
     Date : 2022.07.25
