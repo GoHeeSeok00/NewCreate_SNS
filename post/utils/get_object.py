@@ -1,4 +1,6 @@
-from post.models import PostImageModel, PostModel
+from django.core.exceptions import PermissionDenied
+
+from post.models import PostImageModel, PostLikeModel, PostModel
 
 
 def get_post_object_return_object_or_none(self, obj_id):
@@ -60,4 +62,24 @@ def get_post_image_object_and_check_permission_return_object_or_none(self, obj_i
         return
 
     self.check_object_permissions(self.request, object)
+    return object
+
+
+def get_post_like_object_return_object_or_none(self, user, post):
+    """
+    Assignee : 희석
+    Date : 2022.07.25
+
+    :param obj_id: 게시글 사진 객체 아이디
+
+    obj_id로 객체를 가져오고, 퍼미션 검사를 하는 메서드입니다.
+    DoesNotExist 에러 발생 시 None을 리턴합니다.
+    """
+    try:
+        object = PostLikeModel.objects.get(user_id=user, post_id=post)
+    except PostLikeModel.DoesNotExist:
+        return
+
+    if self.request.user != object.user:
+        raise PermissionDenied("접근 권한이 없습니다.")
     return object
