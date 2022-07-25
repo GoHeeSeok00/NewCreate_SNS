@@ -26,6 +26,7 @@ class PostLike(models.Model):
         on_delete=models.CASCADE,
         related_name="post_like",
     )
+    is_like = models.BooleanField("좋아요", default=True)
 
     class Meta:
         constraints = [
