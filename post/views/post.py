@@ -27,6 +27,7 @@ class PostView(APIView):
         :param limit:       페이지네이션 개수를 정하기 위한 파라미터입니다. default = 10
         :param sorting:     정렬 방법을 정하는 파라미터입니다.              default = -created_at
         :param searching:   검색을 위한 파라미터입니다.                     default = ""
+        :param hashtags:    필터를 위한 파라미터입니다.                     default = ""
         :return Response:   게시글 목록 data, 상태코드
         """
 
@@ -49,6 +50,17 @@ class PostView(APIView):
                 title__icontains=word
             )
 
+        # 필터 설정
+        hashtag = request.GET.get("hashtags", "") or ""
+        if hashtag == "":
+            pass
+        else:
+            hashtag_list = hashtag.split(",")
+
+            for word in hashtag_list:
+                search_posts = search_posts.filter(hashtags_text__icontains=f"#{word},")
+
+        # 조건에 맞는 게시글 가져오기
         posts = search_posts.order_by(sorting).filter(status__status="public")[
             offset : offset + limit
         ]
