@@ -4,6 +4,7 @@ exclude =
     .git,
     .gitignore,
     */migrations/*,
+    __init__.py,
     __pycache__,
 ignore =
     E203,

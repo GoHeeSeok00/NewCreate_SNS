@@ -6,9 +6,9 @@ def get_object_and_check_permission(self, obj_id):
     Assignee : 희석
     Date : 2022.07.22
 
-    :param obj_id: 사용자 모델의 기본키(id필드)
+    :param obj_id: 사용자 객체 아이디
 
-    인자로 오브젝트의 id를 가져오고, 퍼미션 검사를 하는 메서드입니다.
+    obj_id로 사용자 객체를 가져오고, 퍼미션 검사를 하는 메서드입니다.
     DoesNotExist 에러 발생 시 None을 리턴합니다.
     """
     try:
