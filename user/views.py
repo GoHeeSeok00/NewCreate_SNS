@@ -156,4 +156,4 @@ class UserWithdraw(APIView):
         serializer = self.serializer_class(user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"message": "삭제 성공"}, status=status.HTTP_200_OK)
+        return Response({"message": "탈퇴 성공"}, status=status.HTTP_200_OK)
