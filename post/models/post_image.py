@@ -20,3 +20,6 @@ class PostImage(models.Model):
     image = models.ImageField(
         "게시글 사진", upload_to="post/static/post_image/", max_length=None
     )
+
+    def __str__(self):
+        return f"제목 : {self.post.title} / 이미지 : {self.image}"
