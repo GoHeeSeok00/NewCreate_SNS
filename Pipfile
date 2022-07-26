@@ -13,6 +13,8 @@ pre-commit = "*"
 black = "*"
 flake8 = "*"
 isort = "*"
+pillow = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
