@@ -22,8 +22,8 @@ ALLOWED_HOSTS = ["*"]
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1",
     "https://127.0.0.1",
-    # "http://13.124.49.137",
-    # "https://13.124.49.137",
+    "http://43.200.91.89",
+    "https://43.200.91.89",
 ]
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
