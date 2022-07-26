@@ -72,6 +72,8 @@
 </div>
 </details>
 
+<br>
+
 ## 🛠 사용 기술
 - API<br>
 ![python badge](https://img.shields.io/badge/Python-3.8-%233776AB?style=plastic&logo=python&logoColor=white)
@@ -101,9 +103,21 @@
 ![image](https://user-images.githubusercontent.com/96563183/180922266-663f2b66-56bf-4cb1-b136-7cc99f6f110d.png)
 
 자세한 request, response 예시는 노션 페이지에서 확인할 수 있습니다.
+
 <br>
 
 ## 😎 컨벤션
+
+### 🌵 pre-commit
+![image](https://user-images.githubusercontent.com/96563183/181059300-82993164-1ff8-4296-987e-c6a254840647.png)
+
+- Formatter
+  - isort
+  - black
+- Lint
+  - flack8
+
+**pre-commit 라이브러리를 사용해서 커밋 시 Formatter와 Lint를 실행합니다.**
 
 ### 🍀 커밋 컨벤션
 ```
@@ -182,6 +196,7 @@ develop : 개발 브랜치로 개발자들이 이 브랜치를 기준으로 각�
 feature : 단위 기능을 개발하는 브랜치로 기능 개발이 완료되면 develop 브랜치에 Merge
 release : 배포를 위해 master 브랜치로 보내기 전에 먼저 QA(품질검사)를 하기위한 브랜치
 ```
+
 <br>
 
 ## 📱 이슈, Task 관리
@@ -198,7 +213,7 @@ release : 배포를 위해 master 브랜치로 보내기 전에 먼저 QA(품질
 ![image](https://user-images.githubusercontent.com/96563183/180921895-f6a4805b-6125-4346-8858-7e2ec0842daf.png)
 
 <details>
-<summary>🚀 Postman API 테스트</summary> <br>
+  <summary><b> 🚀 Postman API 테스트</b> </summary> <br>
 <div markdown="1">
 
 1. 회원가입
