@@ -33,3 +33,6 @@ class PostLike(TimeStampModel):
         constraints = [
             models.UniqueConstraint(fields=["user", "post"], name="unique_user_post"),
         ]
+
+    def __str__(self):
+        return f"사용자 : {self.user.nickname} / 게시글 : {self.post.title} / 좋아요 : {self.is_like}"

@@ -29,3 +29,6 @@ class Post(TimeStampModel):
     hashtags_text = models.TextField("해시태그")
     view_count = models.IntegerField("조회수", default=0)
     like_count = models.IntegerField("좋아요수", default=0)
+
+    def __str__(self):
+        return f"제목 : {self.title} / 작성자 : {self.user.nickname}"
