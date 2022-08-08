@@ -31,14 +31,6 @@ class PostView(APIView):
         :return Response:   게시글 목록 data, 상태코드
         """
 
-        # 페이지네이션 설정
-        page = int(request.GET.get("page", 1) or 1)
-        limit = int(request.GET.get("limit", 10) or 10)
-        offset = limit * (page - 1)
-
-        # 정렬 설정
-        sorting = request.GET.get("sorting", "-created_at") or "-created_at"
-
         # 검색 설정
         search = request.GET.get("searching", "") or ""
         search_list = search.split(" ")
@@ -59,6 +51,14 @@ class PostView(APIView):
 
             for word in hashtag_list:
                 search_posts = search_posts.filter(hashtags_text__icontains=f"#{word},")
+
+        # 페이지네이션 설정
+        page = int(request.GET.get("page", 1) or 1)
+        limit = int(request.GET.get("limit", 10) or 10)
+        offset = limit * (page - 1)
+
+        # 정렬 설정
+        sorting = request.GET.get("sorting", "-created_at") or "-created_at"
 
         # 조건에 맞는 게시글 가져오기
         posts = search_posts.order_by(sorting).filter(status__status="public")[
