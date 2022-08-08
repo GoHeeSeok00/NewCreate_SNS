@@ -97,6 +97,18 @@ class UserWithdrawSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
-        if data["is_active"] != True:
+        if data["is_active"] != False:
             raise serializers.ValidationError("잘못된 입력입니다.")
         return data
+
+    def update(self, instance, validated_data):
+        """
+        입력된 필드만 수정
+        is_active = False | 회원 탈퇴
+        """
+        field_list = []
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+            field_list.append(key)
+        instance.save(update_fields=field_list)
+        return instance

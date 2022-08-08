@@ -142,7 +142,7 @@ class UserWithdraw(APIView):
         """
         회원 탈퇴
 
-        :param request["is_active"]:  회원 탈퇴를 위해 True를 입력받습니다.
+        :param request["is_active"]:  회원 탈퇴를 위해 False를 입력받습니다.
         :param obj_id:                사용자 모델의 기본키(id필드)
 
         :return Response:             (에러 or 메시지) and 상태코드 응답
@@ -156,4 +156,4 @@ class UserWithdraw(APIView):
         serializer = self.serializer_class(user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"message": "삭제 성공"}, status=status.HTTP_200_OK)
+        return Response({"message": "탈퇴 성공"}, status=status.HTTP_200_OK)
