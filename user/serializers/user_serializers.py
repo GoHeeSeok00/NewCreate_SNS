@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from post.serializers import PostListSerializer
 from user.models import User as UserModel
 
 
@@ -90,6 +91,12 @@ class UserSimpleDetailSerializer(serializers.ModelSerializer):
     개인정보를 제외한 간단한 정보만 보여 주기 위한 시리얼라이저입니다.
     """
 
+    post = serializers.SerializerMethodField()
+
+    def get_post(self, obj):
+        posts = obj.post
+        return {"posts": PostListSerializer(posts, many=True).data}
+
     class Meta(object):
         model = UserModel
         fields = [
@@ -98,6 +105,7 @@ class UserSimpleDetailSerializer(serializers.ModelSerializer):
             "nickname",
             "profile_image",
             "introduce",
+            "post",
         ]
 
 
