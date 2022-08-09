@@ -82,6 +82,25 @@ class UserDetailSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserSimpleDetailSerializer(serializers.ModelSerializer):
+    """
+    Assignee : 고희석
+    Date : 2022.08.10
+
+    개인정보를 제외한 간단한 정보만 보여 주기 위한 시리얼라이저입니다.
+    """
+
+    class Meta(object):
+        model = UserModel
+        fields = [
+            "id",
+            "email",
+            "nickname",
+            "profile_image",
+            "introduce",
+        ]
+
+
 class UserWithdrawSerializer(serializers.ModelSerializer):
     """
     Assignee : 고희석
