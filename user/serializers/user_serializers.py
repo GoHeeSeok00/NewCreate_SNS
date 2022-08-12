@@ -94,7 +94,12 @@ class UserSimpleDetailSerializer(serializers.ModelSerializer):
     post = serializers.SerializerMethodField()
 
     def get_post(self, obj):
-        posts = obj.post
+        page = self.context["page"]
+        limit = 10  # 사용자 상세 조회시 limit은 10으로 고정입니다.
+        offset = limit * (page - 1)
+        posts = obj.post.order_by("-created_at").filter(status__status="public")[
+            offset : offset + limit
+        ]
         return {"posts": PostListSerializer(posts, many=True).data}
 
     class Meta(object):

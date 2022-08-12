@@ -94,13 +94,19 @@ class UserDetailView(APIView):
         본인의 상세 정보를 보고싶은 경우 프로필 수정에서 확인할 수 있습니다.
         """
 
+        # 페이지네이션 설정
+        page = int(request.GET.get("page", 1) or 1)
+
         user = get_user_object(self, obj_id)
         self.serializer_class = UserSimpleDetailSerializer
         if not user:
             return Response(
                 {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
             )
-        return Response(self.serializer_class(user).data, status=status.HTTP_200_OK)
+        return Response(
+            self.serializer_class(user, context={"page": page}).data,
+            status=status.HTTP_200_OK,
+        )
 
     def put(self, request, obj_id):
         """
