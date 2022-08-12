@@ -90,8 +90,8 @@ class UserDetailView(APIView):
         :param obj_id:      사용자 모델의 기본키(id필드)
         :return Response:   (에러 or 사용자 정보) and 상태코드 응답
 
-        1. 본인의 정보를 요청하는 경우 디테일한 개인 정보를 모두 보여줍니다.
-        2. 다른 유저의 정보를 요청하는 경우 개인 정보를 제외한 일부 정보만 보여줍니다.
+        사용자를 검색하는 경우 개인 정보를 제외한 일부 정보만 보여줍니다.
+        본인의 상세 정보를 보고싶은 경우 프로필 수정에서 확인할 수 있습니다.
         """
 
         user = get_user_object(self, obj_id)
