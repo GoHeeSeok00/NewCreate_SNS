@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from post.serializers import PostListSerializer
 from user.models import User as UserModel
 
 
@@ -82,6 +83,37 @@ class UserDetailSerializer(serializers.ModelSerializer):
         return instance
 
 
+class UserSimpleDetailSerializer(serializers.ModelSerializer):
+    """
+    Assignee : 고희석
+    Date : 2022.08.10
+
+    개인정보를 제외한 간단한 정보만 보여 주기 위한 시리얼라이저입니다.
+    """
+
+    post = serializers.SerializerMethodField()
+
+    def get_post(self, obj):
+        page = self.context["page"]
+        limit = 10  # 사용자 상세 조회시 limit은 10으로 고정입니다.
+        offset = limit * (page - 1)
+        posts = obj.post.order_by("-created_at").filter(status__status="public")[
+            offset : offset + limit
+        ]
+        return {"posts": PostListSerializer(posts, many=True).data}
+
+    class Meta(object):
+        model = UserModel
+        fields = [
+            "id",
+            "email",
+            "nickname",
+            "profile_image",
+            "introduce",
+            "post",
+        ]
+
+
 class UserWithdrawSerializer(serializers.ModelSerializer):
     """
     Assignee : 고희석
@@ -97,6 +129,18 @@ class UserWithdrawSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
-        if data["is_active"] != True:
+        if data["is_active"] != False:
             raise serializers.ValidationError("잘못된 입력입니다.")
         return data
+
+    def update(self, instance, validated_data):
+        """
+        입력된 필드만 수정
+        is_active = False | 회원 탈퇴
+        """
+        field_list = []
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+            field_list.append(key)
+        instance.save(update_fields=field_list)
+        return instance
