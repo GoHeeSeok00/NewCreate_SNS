@@ -37,6 +37,8 @@ class PostSerializer(serializers.ModelSerializer):
     """
     Assignee : 고희석
     Date : 2022.07.22
+    Update
+        - 2022.08.25 : 해시 태그 밸리데이션 추가
 
     게시글 등록을 위한 시리얼라이저입니다.
     """
@@ -53,6 +55,10 @@ class PostSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data["status"].status == "delete":  # public, private 만 가능
             raise serializers.ValidationError("잘못된 입력입니다.")
+        if data["hashtags_text"][0] != "#" or data["hashtags_text"][-1] != ",":
+            raise serializers.ValidationError(
+                "해시 태그는 '#'으로 시작하고 ','로 끝나게 작성해야 합니다. ex) #코딩,#파이썬,"
+            )
         return data
 
     def create(self, validated_data):
