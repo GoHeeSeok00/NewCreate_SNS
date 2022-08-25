@@ -39,6 +39,7 @@ class PostLikeView(APIView):
         request.data["user"] = request.user.id
         request.data["post"] = obj_id
 
+        # 좋아요 모델 유효성 검사
         post_like = get_post_like_object_return_object_or_none(self, **request.data)
         if not post_like:
             serializer = PostLikeSerializer(data=request.data)

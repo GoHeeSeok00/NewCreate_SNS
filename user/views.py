@@ -8,9 +8,10 @@ from user.serializers.signup_serializers import SignupSerializer
 from user.serializers.user_serializers import (
     UserDetailSerializer,
     UserListSerializer,
+    UserSimpleDetailSerializer,
     UserWithdrawSerializer,
 )
-from user.utils import get_object_and_check_permission
+from user.utils import get_user_object, get_user_object_and_check_permission
 
 
 # url : /api/users/signup
@@ -86,16 +87,26 @@ class UserDetailView(APIView):
         """
         사용자 상세 조회
 
-        :param request:
         :param obj_id:      사용자 모델의 기본키(id필드)
         :return Response:   (에러 or 사용자 정보) and 상태코드 응답
+
+        사용자를 검색하는 경우 개인 정보를 제외한 일부 정보만 보여줍니다.
+        본인의 상세 정보를 보고싶은 경우 프로필 수정에서 확인할 수 있습니다.
         """
-        user = get_object_and_check_permission(self, obj_id)
+
+        # 페이지네이션 설정
+        page = int(request.GET.get("page", 1) or 1)
+
+        user = get_user_object(self, obj_id)
+        self.serializer_class = UserSimpleDetailSerializer
         if not user:
             return Response(
                 {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
             )
-        return Response(self.serializer_class(user).data, status=status.HTTP_200_OK)
+        return Response(
+            self.serializer_class(user, context={"page": page}).data,
+            status=status.HTTP_200_OK,
+        )
 
     def put(self, request, obj_id):
         """
@@ -113,12 +124,11 @@ class UserDetailView(APIView):
 
         :return Response:                       (에러 or 메시지) and 상태코드 응답
         """
-        user = get_object_and_check_permission(self, obj_id)
+        user = get_user_object_and_check_permission(self, obj_id)
         if not user:
             return Response(
                 {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
             )
-
         serializer = self.serializer_class(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -142,12 +152,12 @@ class UserWithdraw(APIView):
         """
         회원 탈퇴
 
-        :param request["is_active"]:  회원 탈퇴를 위해 True를 입력받습니다.
+        :param request["is_active"]:  회원 탈퇴를 위해 False를 입력받습니다.
         :param obj_id:                사용자 모델의 기본키(id필드)
 
         :return Response:             (에러 or 메시지) and 상태코드 응답
         """
-        user = get_object_and_check_permission(self, obj_id)
+        user = get_user_object_and_check_permission(self, obj_id)
         if not user:
             return Response(
                 {"error": "존재하지 않는 회원입니다."}, status=status.HTTP_404_NOT_FOUND
