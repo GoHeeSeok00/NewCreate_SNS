@@ -28,6 +28,7 @@ class PostView(APIView):
         :param sorting:     정렬 방법을 정하는 파라미터입니다.              default = -created_at
         :param searching:   검색을 위한 파라미터입니다.                     default = ""
         :param hashtags:    필터를 위한 파라미터입니다.                     default = ""
+        :param post-status: 포스트 상태 필터를 위한 파라미터입니다.         default = "public"
         :return Response:   게시글 목록 data, 상태코드
         """
 
@@ -60,10 +61,32 @@ class PostView(APIView):
         # 정렬 설정
         sorting = request.GET.get("sorting", "-created_at") or "-created_at"
 
-        # 조건에 맞는 게시글 가져오기
-        posts = search_posts.order_by(sorting).filter(status__status="public")[
-            offset : offset + limit
-        ]
+        # status 설정
+        post_status = request.GET.get("post-status", "public") or "public"
+
+        # 게시글 status가 list에 없는 경우
+        if post_status not in ["public", "private", "delete"]:
+            return Response(
+                {
+                    "error": "post의 status는 'public', 'private', 'delete' 중 하나만 선택 가능합니다."
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        # status가 public인 게시글을 조회한다면 전체조회
+        if post_status == "public":
+            # 조건에 맞는 게시글 가져오기
+            posts = search_posts.order_by(sorting).filter(status__status=post_status)[
+                offset : offset + limit
+            ]
+            return Response(
+                PostListSerializer(posts, many=True).data, status=status.HTTP_200_OK
+            )
+
+        # status가 private or delete 일때는 내가 작성한 글만 조회
+        posts = search_posts.order_by(sorting).filter(
+            user=request.user, status__status=post_status
+        )[offset : offset + limit]
         return Response(
             PostListSerializer(posts, many=True).data, status=status.HTTP_200_OK
         )
