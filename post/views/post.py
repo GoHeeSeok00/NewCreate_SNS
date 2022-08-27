@@ -2,8 +2,13 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from post.models import PostModel
 from post.serializers import PostListSerializer, PostSerializer
+from post.services.post_service import (
+    get_post_filtering_result,
+    get_post_paging_result,
+    get_post_searching_result,
+    get_post_sorting_result,
+)
 
 
 # url : /api/posts
@@ -23,45 +28,27 @@ class PostView(APIView):
         """
         게시글 목록 조회
 
-        :param page:        페이지네이션을 위한 파라미터입니다.             default = 1
-        :param limit:       페이지네이션 개수를 정하기 위한 파라미터입니다. default = 10
-        :param sorting:     정렬 방법을 정하는 파라미터입니다.              default = -created_at
-        :param searching:   검색을 위한 파라미터입니다.                     default = ""
-        :param hashtags:    필터를 위한 파라미터입니다.                     default = ""
-        :param post-status: 포스트 상태 필터를 위한 파라미터입니다.         default = "public"
-        :return Response:   게시글 목록 data, 상태코드
+        :param page:        현재 페이지                                  default = 1
+        :param limit:       한 페이지의 게시글 수                        default = 10
+        :param sorting:     정렬 조건                                    default = -created_at
+        :param searching:   검색어(" "를 기준으로 split)                 default = ""
+        :param hashtags:    필터를 위한 해시 태그(","를 기준으로 split)  default = ""
+        :param post-status: 게시글 status                                default = "public"
+        :return Response:   게시글 목록 data, http status
         """
 
-        # 검색 설정
+        # 검색
         search = request.GET.get("searching", "") or ""
         search_list = search.split(" ")
+        posts = get_post_searching_result(search_list)
 
-        search_posts = PostModel.objects.filter(title__icontains=search_list[0])
-
-        for word in search_list[1:]:
-            search_posts = search_posts | PostModel.objects.filter(
-                title__icontains=word
-            )
-
-        # 필터 설정
+        # 필터
         hashtag = request.GET.get("hashtags", "") or ""
-        if hashtag == "":
-            pass
-        else:
+        if hashtag != "":
             hashtag_list = hashtag.split(",")
+            posts = get_post_filtering_result(posts, hashtag_list)
 
-            for word in hashtag_list:
-                search_posts = search_posts.filter(hashtags_text__icontains=f"#{word},")
-
-        # 페이지네이션 설정
-        page = int(request.GET.get("page", 1) or 1)
-        limit = int(request.GET.get("limit", 10) or 10)
-        offset = limit * (page - 1)
-
-        # 정렬 설정
-        sorting = request.GET.get("sorting", "-created_at") or "-created_at"
-
-        # status 설정
+        # status
         post_status = request.GET.get("post-status", "public") or "public"
 
         # 게시글 status가 list에 없는 경우
@@ -70,23 +57,25 @@ class PostView(APIView):
                 {
                     "error": "post의 status는 'public', 'private', 'delete' 중 하나만 선택 가능합니다."
                 },
-                status=status.HTTP_404_NOT_FOUND,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         # status가 public인 게시글을 조회한다면 전체조회
         if post_status == "public":
-            # 조건에 맞는 게시글 가져오기
-            posts = search_posts.order_by(sorting).filter(status__status=post_status)[
-                offset : offset + limit
-            ]
-            return Response(
-                PostListSerializer(posts, many=True).data, status=status.HTTP_200_OK
-            )
-
+            posts = posts.filter(status__status=post_status)
         # status가 private or delete 일때는 내가 작성한 글만 조회
-        posts = search_posts.order_by(sorting).filter(
-            user=request.user, status__status=post_status
-        )[offset : offset + limit]
+        else:
+            posts = posts.filter(user=request.user, status__status=post_status)
+
+        # 정렬
+        sorting = request.GET.get("sorting", "-created_at") or "-created_at"
+        posts = get_post_sorting_result(posts, sorting)
+
+        # 페이지네이션
+        page = int(request.GET.get("page", 1) or 1)
+        limit = int(request.GET.get("limit", 10) or 10)
+        posts = get_post_paging_result(posts, page, limit)
+
         return Response(
             PostListSerializer(posts, many=True).data, status=status.HTTP_200_OK
         )
